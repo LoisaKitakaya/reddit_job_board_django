@@ -50,7 +50,9 @@ CORS_ALLOW_HEADERS = (*default_headers,)
 # Application definition
 
 INSTALLED_APPS = [
+    "django_daisy",
     "django.contrib.admin",
+    "django.contrib.humanize",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
