@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
+    "posts",
 ]
 
 MIDDLEWARE = [
@@ -192,3 +194,32 @@ REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 # gemini AI settings
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = "gemini-2.5-flash"
+
+# Django Daisy UI
+
+DAISY_SETTINGS = {
+    "SITE_TITLE": f"{os.getenv("ORGANIZATION_NAME")} - Admin",
+    "SITE_HEADER": os.getenv("ORGANIZATION_NAME"),
+    "INDEX_TITLE": "Hi, welcome to your dashboard",
+    "SITE_LOGO": None,
+    "EXTRA_STYLES": [],
+    "EXTRA_SCRIPTS": [],
+    "LOAD_FULL_STYLES": True,
+    "SHOW_CHANGELIST_FILTER": False,
+    "DONT_SUPPORT_ME": True,
+    "SIDEBAR_FOOTNOTE": "",
+    "APPS_REORDER": {
+        "auth": {
+            "icon": "fa-solid fa-lock",
+            "name": "Authentication",
+            "hide": False,
+            "divider_title": "Auth",
+        },
+        "posts": {
+            "icon": "fa-solid fa-table-list",
+            "name": "Posts",
+            "hide": False,
+            "divider_title": "Reddit Posts",
+        },
+    },
+}
