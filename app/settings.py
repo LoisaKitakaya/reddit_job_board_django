@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 from corsheaders.defaults import default_methods
 from corsheaders.defaults import default_headers
@@ -187,6 +188,18 @@ CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BEAT_SCHEDULE = {
+    "generate-reddit-leads": {
+        "task": "posts.tasks.generate_leads",
+        # "schedule": crontab(hour=0, minute=0),
+        "schedule": crontab(minute="*"),
+    },
+    # "delete-old-posts": {
+    #     "task": "posts.tasks.delete_old_posts",
+    #     # "schedule": crontab(hour=0, minute=0, day_of_week=1),
+    #     "schedule": crontab(minute="*"),
+    # },
+}
 
 # reddit settings
 CLIENT_ID = os.getenv("CLIENT_ID")
