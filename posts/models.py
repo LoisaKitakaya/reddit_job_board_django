@@ -3,11 +3,11 @@ from django.db import models
 
 
 class Post(models.Model):
-    TASK = "job"
+    TASK = "task"
     OFFER = "offer"
 
     TRIGGER = [
-        (TASK, "Job"),
+        (TASK, "Task"),
         (OFFER, "Offer"),
     ]
 
