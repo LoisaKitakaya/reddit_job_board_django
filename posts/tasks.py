@@ -1,9 +1,11 @@
 import praw
+import datetime
 from google import genai
 from posts.models import Post
 from celery import shared_task
 from django.conf import settings
 from django.utils import timezone
+from django.db import IntegrityError
 from datetime import datetime, timedelta
 
 
@@ -98,8 +100,14 @@ def generate_leads(posts_limit: int = 10):
     current_time = timezone.now()
     one_day_ago = current_time - timedelta(days=1)
 
+    print("=" * 50)
+    print("🚀 Starting Reddit Leads Generation...")
+    print("=" * 50)
+
     for target_sub in TARGET_SUBS:
         subreddit = reddit.subreddit(target_sub)
+
+        print(f"📥 Compiling from: {subreddit.display_name}")
 
         try:
             for submission in subreddit.new(limit=posts_limit):
@@ -108,50 +116,68 @@ def generate_leads(posts_limit: int = 10):
 
                 title = submission.title
 
-                for offer_trigger in OFFER_TRIGGER_PHRASES:
-                    if offer_trigger in title:
-                        Post.objects.create(
-                            post_owner_reddit_username=(
-                                submission.author.name if submission.author else "N/A"
-                            ),
-                            reddit_post_id=submission.id,
-                            post_url=submission.url,
-                            post_title=title,
-                            post_category=categorize_title(title),
-                            post_trigger="offer",
-                            subreddit=subreddit.display_name,
-                            post_time=datetime.fromtimestamp(
-                                submission.created_utc
-                            ).strftime("%Y-%m-%d %H:%M:%S"),
-                        )
+                post_trigger = None
+
+                for trigger in OFFER_TRIGGER_PHRASES:
+                    if trigger in title:
+                        post_trigger = Post.OFFER
 
                         break
 
-                for task_trigger in TASK_TRIGGER_PHRASES:
-                    if task_trigger in title:
-                        Post.objects.create(
-                            post_owner_reddit_username=(
-                                submission.author.name if submission.author else "N/A"
-                            ),
-                            reddit_post_id=submission.id,
-                            post_url=submission.url,
-                            post_title=title,
-                            post_category=categorize_title(title),
-                            post_trigger="task",
-                            subreddit=subreddit.display_name,
-                            post_time=datetime.fromtimestamp(
-                                submission.created_utc
-                            ).strftime("%Y-%m-%d %H:%M:%S"),
-                        )
+                for trigger in TASK_TRIGGER_PHRASES:
+                    if trigger in title:
+                        post_trigger = Post.TASK
 
                         break
+
+                if not post_trigger:
+                    continue
+
+                post_time = timezone.make_aware(
+                    datetime.fromtimestamp(submission.created_utc),
+                    timezone=timezone.get_fixed_timezone(0),
+                )
+
+                post_data = {
+                    "post_owner_reddit_username": (
+                        submission.author.name if submission.author else "N/A"
+                    ),
+                    "reddit_post_id": submission.id,
+                    "post_url": submission.url,
+                    "post_title": title,
+                    "post_category": categorize_title(title),
+                    "post_trigger": post_trigger,
+                    "subreddit": subreddit.display_name,
+                    "post_time": post_time,
+                }
+
+                post_exitsts = Post.objects.filter(
+                    reddit_post_id=submission.id
+                ).exists()
+
+                try:
+                    if not post_exitsts:
+
+                        Post.objects.create(**post_data)
+
+                        print(
+                            f"{'Created' if post_exitsts else 'Skipped'} post: {submission.id}, title: {title}"
+                        )
+
+                except IntegrityError as e:
+                    raise Exception(
+                        f"Error saving lead/post for {submission.author.name if submission.author else "N/A"}: {e}"
+                    )
 
         except Exception as e:
-            raise Exception(f"Error processing subreddit {subreddit.display_name}: {e}")
+            raise Exception(
+                f"Error processing subreddit {subreddit.display_name}: {e}"
+            )
+
 
 
 @shared_task
 def delete_old_posts():
     one_week_ago = timezone.now() - timedelta(days=7)
-    
+
     Post.objects.filter(post_time__lt=one_week_ago).delete()

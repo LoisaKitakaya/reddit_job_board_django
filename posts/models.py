@@ -5,10 +5,12 @@ from django.db import models
 class Post(models.Model):
     TASK = "task"
     OFFER = "offer"
+    UNSPECIFIC = "unspecific"
 
     TRIGGER = [
         (TASK, "Task"),
         (OFFER, "Offer"),
+        (UNSPECIFIC, "Unspecific"),
     ]
 
     id = models.UUIDField(
@@ -18,7 +20,6 @@ class Post(models.Model):
     )
     post_owner_reddit_username = models.CharField(
         max_length=100,
-        unique=True,
         db_index=True,
     )
     reddit_post_id = models.CharField(
@@ -39,6 +40,7 @@ class Post(models.Model):
     post_trigger = models.CharField(
         max_length=20,
         choices=TRIGGER,
+        default=UNSPECIFIC,
         blank=True,
         null=True,
     )

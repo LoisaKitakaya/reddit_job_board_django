@@ -189,16 +189,10 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULE = {
-    "generate-reddit-leads": {
-        "task": "posts.tasks.generate_leads",
-        # "schedule": crontab(hour=0, minute=0),
-        "schedule": crontab(minute="*"),
+    "delete-old-posts": {
+        "task": "posts.tasks.delete_old_posts",
+        "schedule": crontab(hour=0, minute=0, day_of_week=1),
     },
-    # "delete-old-posts": {
-    #     "task": "posts.tasks.delete_old_posts",
-    #     # "schedule": crontab(hour=0, minute=0, day_of_week=1),
-    #     "schedule": crontab(minute="*"),
-    # },
 }
 
 # reddit settings
@@ -214,7 +208,7 @@ GEMINI_MODEL = "gemini-2.5-flash"
 # Django Daisy UI
 
 DAISY_SETTINGS = {
-    "SITE_TITLE": f"{os.getenv("ORGANIZATION_NAME")} - Admin",
+    "SITE_TITLE": " ",
     "SITE_HEADER": os.getenv("ORGANIZATION_NAME"),
     "INDEX_TITLE": "Hi, welcome to your dashboard",
     "SITE_LOGO": None,
