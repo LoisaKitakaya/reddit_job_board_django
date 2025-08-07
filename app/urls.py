@@ -16,12 +16,8 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.conf import settings
 from django.urls import path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
 ]
-
-admin.site.site_header = f"{settings.ORGANIZATION_NAME} - Admin"
-admin.site.site_title = f"{settings.ORGANIZATION_NAME}"
