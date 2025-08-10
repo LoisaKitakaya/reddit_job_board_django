@@ -6,30 +6,31 @@ from posts.models import Post
 router = Router()
 
 
-@router.get("/reddit_posts", response=List[Results])
+@router.get("/reddit_posts", response=Results)
 def get_reddit_posts(
     request,
     post_owner: str = "",
     post_trigger: str = "",
     subreddit: str = "",
-    limit: int = 10,
+    limit: int = 20,
+    offset: int = 0,
 ):
-    if post_owner:
-        return Post.objects.filter(
-            post_owner_reddit_username=post_owner,
-        )[:limit]
+    queryset = Post.objects.all()
 
+    if post_owner:
+        queryset = queryset.filter(post_owner_reddit_username=post_owner)
     if post_trigger:
-        return Post.objects.filter(
-            post_trigger=post_trigger,
-        )[:limit]
-
+        queryset = queryset.filter(post_trigger=post_trigger)
     if subreddit:
-        return Post.objects.filter(
-            subreddit=subreddit,
-        )[:limit]
+        queryset = queryset.filter(subreddit=subreddit)
 
-    if post_owner:
-        return Post.objects.filter()[:limit]
+    total_count = queryset.count()
 
-    return Post.objects.all()[:limit]
+    posts = queryset[offset : offset + limit]
+
+    return {
+        "posts": posts,
+        "total_count": total_count,
+        "limit": limit,
+        "offset": offset,
+    }
