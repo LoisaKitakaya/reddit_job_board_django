@@ -6,6 +6,8 @@ ENV TZ=UTC
 
 WORKDIR /app
 
+RUN useradd -m -u 1000 appuser
+
 COPY ./requirements.txt .
 
 RUN apt-get update && \
@@ -17,6 +19,10 @@ RUN apt-get update && \
 
 COPY . .
 
+RUN chown -R appuser:appuser /app
+
+USER appuser
+
 EXPOSE 8000
 
-CMD ["sh", "-c", "celery -A app.celery worker -l info & celery -A app.celery beat -l info & gunicorn --bind 0.0.0.0:8000 --workers 4 app.wsgi:application"]
+CMD ["sh", "-c", "celery -A app.celery worker -l info && celery -A app.celery beat -l info && gunicorn --bind 0.0.0.0:8000 --workers 4 app.wsgi:application"]
