@@ -11,6 +11,8 @@ def get_reddit_posts(
     request,
     post_owner: str = "",
     post_trigger: str = "",
+    post_category: str = "",
+    desired_skill: str = "",
     subreddit: str = "",
     limit: int = 20,
     offset: int = 0,
@@ -21,6 +23,10 @@ def get_reddit_posts(
         queryset = queryset.filter(post_owner_reddit_username=post_owner)
     if post_trigger:
         queryset = queryset.filter(post_trigger=post_trigger)
+    if post_category:
+        queryset = queryset.filter(post_category=post_category)
+    if desired_skill:
+        queryset = queryset.filter(desired_skill__icontains=desired_skill)
     if subreddit:
         queryset = queryset.filter(subreddit=subreddit)
 
