@@ -6,7 +6,11 @@ from posts.models import Post
 router = Router()
 
 
-@router.get("/reddit_posts", response=Results)
+@router.get(
+    "/reddit_posts",
+    response=Results,
+    description="Endpoint to fetch and filter Reddit job posts",
+)
 def get_reddit_posts(
     request,
     post_owner: str = "",
