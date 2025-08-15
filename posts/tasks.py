@@ -367,14 +367,14 @@ def generate_leads(posts_limit: int = 10):
     current_time = timezone.now()
     one_day_ago = current_time - timedelta(days=1)
 
-    print("=" * 50)
-    print("🚀 Starting Reddit Leads Generation...")
-    print("=" * 50)
+    # print("=" * 50)
+    # print("🚀 Starting Reddit Leads Generation...")
+    # print("=" * 50)
 
     for target_sub in TARGET_SUBS:
         subreddit = reddit.subreddit(target_sub)
 
-        print(f"📥 Compiling from: {subreddit.display_name}")
+        # print(f"📥 Compiling from: {subreddit.display_name}")
 
         try:
             for submission in subreddit.new(limit=posts_limit):
@@ -428,9 +428,10 @@ def generate_leads(posts_limit: int = 10):
 
                         Post.objects.create(**post_data)
 
-                        print(
-                            f"{'Created' if post_exitsts else 'Skipped'} post: {submission.id}, title: {title}"
-                        )
+                        # print(f"Created post: {submission.id}, title: {title}")
+
+                    # else:
+                        # print(f"Skipped post: {submission.id}, title: {title}")
 
                 except IntegrityError as e:
                     raise Exception(

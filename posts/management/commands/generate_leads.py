@@ -440,9 +440,10 @@ class Command(BaseCommand):
 
                             Post.objects.create(**post_data)
 
-                            self.stdout.write(
-                                f"{'Created' if post_exitsts else 'Skipped'} post: {submission.id}, title: {title}"
-                            )
+                            self.stdout.write(f"Created post: {submission.id}, title: {title}")
+
+                        else:
+                            self.stdout.write(f"Skipped post: {submission.id}, title: {title}")
 
                     except IntegrityError as e:
                         raise Exception(
