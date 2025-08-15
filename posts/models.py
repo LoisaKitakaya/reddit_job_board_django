@@ -37,6 +37,10 @@ class Post(models.Model):
         blank=True,
         null=True,
     )
+    desired_skills = models.TextField(
+        blank=True,
+        null=True,
+    )
     post_trigger = models.CharField(
         max_length=20,
         choices=TRIGGER,
