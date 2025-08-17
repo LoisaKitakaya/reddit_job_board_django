@@ -8,7 +8,7 @@ from django.core.exceptions import (
 )
 from ninja.errors import ValidationError as NinjaValidationError
 
-api = NinjaAPI(urls_namespace="rems_api", version="1.0.0")
+api = NinjaAPI(urls_namespace="reddit_job_board_api", version="1.0.0")
 
 """
 NOTE: Registration of endpoints here 👇
@@ -16,7 +16,7 @@ NOTE: Registration of endpoints here 👇
 
 from posts.api.rest.api import router as query_router
 
-api.add_router("/", query_router, tags=["Reddit Posts"])
+api.add_router("", query_router, tags=["Reddit Posts"])
 
 """
 NOTE: Registration of endpoints here 👆
