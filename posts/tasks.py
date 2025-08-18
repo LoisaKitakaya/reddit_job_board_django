@@ -434,9 +434,7 @@ def generate_leads(posts_limit: int = 10):
                     # print(f"Skipped post: {submission.id}, title: {title}")
 
                 except IntegrityError as e:
-                    raise Exception(
-                        f"Error saving lead/post for {(submission.author.name if submission.author else "N/A")}: {e}"
-                    )
+                    raise Exception(f"Error saving lead/post for: {str(e)}")
 
         except Exception as e:
             raise Exception(f"Error processing subreddit {subreddit.display_name}: {e}")
