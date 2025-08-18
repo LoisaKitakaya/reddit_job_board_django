@@ -431,11 +431,11 @@ def generate_leads(posts_limit: int = 10):
                         # print(f"Created post: {submission.id}, title: {title}")
 
                     # else:
-                        # print(f"Skipped post: {submission.id}, title: {title}")
+                    # print(f"Skipped post: {submission.id}, title: {title}")
 
                 except IntegrityError as e:
                     raise Exception(
-                        f"Error saving lead/post for {submission.author.name if submission.author else "N/A"}: {e}"
+                        f"Error saving lead/post for {(submission.author.name if submission.author else "N/A")}: {e}"
                     )
 
         except Exception as e:
