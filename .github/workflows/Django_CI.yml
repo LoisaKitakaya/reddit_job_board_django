@@ -32,6 +32,7 @@ jobs:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     env:
+      DEBUG: ${{ secrets.DEBUG }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
       CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
