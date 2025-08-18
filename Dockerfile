@@ -25,5 +25,4 @@ USER appuser
 
 EXPOSE 8000
 
-# CMD ["sh", "-c", "celery -A app.celery worker -l info && celery -A app.celery beat -l info && gunicorn --bind 0.0.0.0:8000 --workers 1 app.wsgi:application"]
 CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 --workers 1 app.wsgi:application"]
