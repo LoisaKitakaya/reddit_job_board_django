@@ -39,9 +39,9 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ")  # type: ignore
 
 CORS_ALLOW_ALL_ORIGINS = bool(os.getenv("DEBUG", default=0))
 
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(" ")  # type: ignore
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://localhost:3000"] if DEBUG else os.getenv("CORS_ALLOWED_ORIGINS").split(" ")  # type: ignore
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split(" ")  # type: ignore
+CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0:8000", "http://localhost:8000", "http://127.0.0.1:8000"] if DEBUG else os.getenv("CSRF_TRUSTED_ORIGINS").split(" ")  # type: ignore
 
 CORS_ALLOW_METHODS = (*default_methods,)
 
